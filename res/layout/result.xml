@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <ImageView
-        android:id="@+id/main_image"
+        android:id="@+id/result_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/main_color_holder"
@@ -12,18 +13,11 @@
         android:scaleType="centerInside" />
 
     <LinearLayout
-        android:padding="10dp"
-        android:id="@+id/main_color_holder"
+        android:id="@+id/result_color_holder"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_above="@+id/main_button"
-        android:orientation="horizontal" />
-
-    <Button
-        android:id="@+id/main_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Load an Image"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="10dp" />
 
 </RelativeLayout>

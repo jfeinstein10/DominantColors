@@ -1,13 +1,15 @@
 package com.dominantcolors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class DominantColor {
 
@@ -26,7 +28,11 @@ public class DominantColor {
 	public static int[] getDominantColors(Bitmap bitmap, int numColors, int minDiff) {
 		// scale down while maintaining aspect ratio
 		if (bitmap.getWidth() > SIDE_SIZE || bitmap.getHeight() > SIDE_SIZE) {
-			bitmap = Bitmap.createScaledBitmap(bitmap, SIDE_SIZE, SIDE_SIZE, false);
+			if (bitmap.getWidth() > bitmap.getHeight()) {
+				bitmap = Bitmap.createScaledBitmap(bitmap, SIDE_SIZE, (int) (SIDE_SIZE*((float)bitmap.getHeight()/bitmap.getWidth())), false);
+			} else {
+				bitmap = Bitmap.createScaledBitmap(bitmap, (int) (SIDE_SIZE*((float)bitmap.getWidth()/bitmap.getHeight())), SIDE_SIZE, false);	
+			}
 		}
 		return kMeans(getPoints(bitmap), numColors, minDiff);
 	}
