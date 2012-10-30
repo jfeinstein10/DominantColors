@@ -89,14 +89,22 @@ public class DominantColor {
 	}
 
 	private static int[] getRandomMiddles(int[] points, int numColors) {
-		int[] middles = new int[numColors];
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 		for (int i = 0; i < points.length; i++)
 			indices.add(i);
 
 		Collections.shuffle(indices);
-		for (int i = 0; i < numColors; i++) {
-			middles[i] = points[indices.get(i)];
+		ArrayList<Integer> midArray = new ArrayList<Integer>();
+		int[] middles = new int[numColors];
+		int index = 0;
+		int midIndex = 0;
+		while (midArray.size() < numColors) {
+			int val = points[indices.get(index)];
+			if (!midArray.contains(val)) {
+				midArray.add(val);
+				middles[midIndex++] = val;
+			}
+			index++;
 		}
 		return middles;
 	}
