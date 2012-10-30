@@ -43,7 +43,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 		int numColors = extras.getInt("numColors");
 		try {
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-			bitmap = Bitmap.createScaledBitmap(bitmap, 480, 320, false);
+			bitmap = DominantColors.resizeToFitInSquare(bitmap, 500);
 			if (mImageView != null)
 				mImageView.setImageBitmap(bitmap);
 			new DominantColorsTask(this, numColors).execute(bitmap);

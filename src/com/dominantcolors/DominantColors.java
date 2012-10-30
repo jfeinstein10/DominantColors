@@ -27,14 +27,21 @@ public class DominantColors {
 
 	public static int[] getDominantColors(Bitmap bitmap, int numColors, int minDiff) {
 		// scale down while maintaining aspect ratio
-		if (bitmap.getWidth() > SIDE_SIZE || bitmap.getHeight() > SIDE_SIZE) {
+		bitmap = resizeToFitInSquare(bitmap, SIDE_SIZE);
+		return kMeans(getPoints(bitmap), numColors, minDiff);
+	}
+	
+	public static Bitmap resizeToFitInSquare(Bitmap bitmap, int side) {
+		if (bitmap.getWidth() > side || bitmap.getHeight() > side) {
 			if (bitmap.getWidth() > bitmap.getHeight()) {
-				bitmap = Bitmap.createScaledBitmap(bitmap, SIDE_SIZE, (int) (SIDE_SIZE*((float)bitmap.getHeight()/bitmap.getWidth())), false);
+				bitmap = Bitmap.createScaledBitmap(bitmap, side, 
+						(int) (side*((float)bitmap.getHeight()/bitmap.getWidth())), false);
 			} else {
-				bitmap = Bitmap.createScaledBitmap(bitmap, (int) (SIDE_SIZE*((float)bitmap.getWidth()/bitmap.getHeight())), SIDE_SIZE, false);	
+				bitmap = Bitmap.createScaledBitmap(bitmap, (int) 
+						(side*((float)bitmap.getWidth()/bitmap.getHeight())), side, false);	
 			}
 		}
-		return kMeans(getPoints(bitmap), numColors, minDiff);
+		return bitmap;
 	}
 
 	private static int[] getPoints(Bitmap bitmap) {
