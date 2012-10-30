@@ -15,7 +15,7 @@ public class DominantColors {
 
 	public static final int DEFAULT_NUM_COLORS = 3;
 	public static final double DEFAULT_MIN_DIFF = 0.5f;
-	public static final int SIDE_SIZE = 200;
+	public static final int SIDE_SIZE = 100;
 
 	public static int[] getDominantColors(Bitmap bitmap) {
 		return getDominantColors(bitmap, DEFAULT_NUM_COLORS);
@@ -129,9 +129,9 @@ public class DominantColors {
 
 	private static double calculateDistance(int c1, int c2) {
 		return Math.sqrt(
-				0.3 * Math.pow(Color.red(c1) - Color.red(c2), 2) +  
-				0.4 * Math.pow(Color.green(c1) - Color.green(c2), 2) +
-				0.3 * Math.pow(Color.blue(c1) - Color.blue(c2), 2));
+				0.9 * Math.pow(Color.red(c1) - Color.red(c2), 2) +  
+				1.2 * Math.pow(Color.green(c1) - Color.green(c2), 2) +
+				0.9 * Math.pow(Color.blue(c1) - Color.blue(c2), 2));
 	}
 
 }

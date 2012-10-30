@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -67,7 +68,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 			finish();
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -92,8 +93,10 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 				iv.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						getWindow().setBackgroundDrawable(new ColorDrawable(color));
-						mCurrentColor.setText(Integer.toHexString(color));
-//						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
+						mCurrentColor.setText(Integer.toHexString(color).substring(2));
+						int avg = (Color.red(color) + Color.green(color) + Color.blue(color))/3;
+						mCurrentColor.setTextColor((avg > 128) ? Color.BLACK : Color.WHITE);
+						//						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
 					}
 				});
 				mColorHolder.addView(iv, params);
