@@ -51,7 +51,7 @@ public class EtsyColorSearchTask extends AsyncTask<Void, Void, Bitmap[]> {
 
 			for (int i = 0; i < results.length(); i++) {
 				String id = results.getJSONObject(i).getString("listing_id");
-				url = "http://openapi.etsy.com/v2/listings/" + URLEncoder.encode(id, "utf-8") + "/images?api_key=" + "rt2grp252q29cjgavqtxp7yr";
+				url = "http://openapi.etsy.com/v2/listings/" + URLEncoder.encode(id, "utf-8") + "/images?api_key=" + API_KEY;
 				request.setURI(new URI(url));
 				response = client.execute(request);
 				reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
