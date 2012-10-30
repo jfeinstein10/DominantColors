@@ -4,5 +4,6 @@
     <string name="title_activity_main">DominantColors</string>
     <string name="number_colors">Number of Colors</string>
     <string name="load_image">Load an Image</string>
+    <string name="select_color">Select a Color</string>
 
 </resources>
