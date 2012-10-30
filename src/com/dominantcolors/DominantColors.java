@@ -30,7 +30,7 @@ public class DominantColors {
 		bitmap = resizeToFitInSquare(bitmap, SIDE_SIZE);
 		return kMeans(getPoints(bitmap), numColors, minDiff);
 	}
-	
+
 	public static Bitmap resizeToFitInSquare(Bitmap bitmap, int side) {
 		if (bitmap.getWidth() > side || bitmap.getHeight() > side) {
 			if (bitmap.getWidth() > bitmap.getHeight()) {
@@ -69,7 +69,7 @@ public class DominantColors {
 				double minDist = Double.MAX_VALUE;
 				int minId = 0;
 				for (int i = 0; i < middles.length; i++) {
-					double dist = euclideanDistance(point, middles[i]);
+					double dist = calculateDistance(point, middles[i]);
 					if (dist < minDist) {
 						minDist = dist;
 						minId = i;
@@ -81,18 +81,14 @@ public class DominantColors {
 			double diff = 0;
 			for (int i = 0; i < middles.length; i++) {
 				int newCenter = calculateCenter(newClusters[i]);
-				diff = Math.max(diff, euclideanDistance(newCenter, middles[i]));
+				diff = Math.max(diff, calculateDistance(newCenter, middles[i]));
 				middles[i] = newCenter;
 			}
 			if (diff < minDiff)
 				break;
 		}
-
-		// copy over and return the middles
-		int[] colors = new int[numColors];
-		for (int i = 0; i < middles.length; i++)
-			colors[i] = middles[i];
-		return colors;
+		
+		return middles;
 	}
 
 	private static int[] getRandomMiddles(int[] points, int numColors) {
@@ -131,11 +127,11 @@ public class DominantColors {
 		}
 	}
 
-	private static double euclideanDistance(int c1, int c2) {
+	private static double calculateDistance(int c1, int c2) {
 		return Math.sqrt(
-				Math.pow(Color.red(c1) - Color.red(c2), 2) + 
-				Math.pow(Color.blue(c1) - Color.blue(c2), 2) + 
-				Math.pow(Color.green(c1) - Color.green(c2), 2));
+				0.3 * Math.pow(Color.red(c1) - Color.red(c2), 2) +  
+				0.4 * Math.pow(Color.green(c1) - Color.green(c2), 2) +
+				0.3 * Math.pow(Color.blue(c1) - Color.blue(c2), 2));
 	}
 
 }

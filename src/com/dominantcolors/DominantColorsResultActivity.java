@@ -93,7 +93,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 					public void onClick(View v) {
 						getWindow().setBackgroundDrawable(new ColorDrawable(color));
 						mCurrentColor.setText(Integer.toHexString(color));
-						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
+//						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
 					}
 				});
 				mColorHolder.addView(iv, params);
