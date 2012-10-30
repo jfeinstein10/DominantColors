@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,8 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dominantcolors.DominantColorsTask.ColorsListener;
+import com.dominantcolors.EtsyColorSearchTask.ColorSearchListener;
 
-public class DominantColorsResultActivity extends Activity implements ColorsListener {
+public class DominantColorsResultActivity extends Activity implements ColorsListener, ColorSearchListener {
 
 	private ImageView mImageView;
 	private TextView mCurrentColor;
@@ -90,11 +92,27 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 				iv.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						getWindow().setBackgroundDrawable(new ColorDrawable(color));
-						mCurrentColor.setText("" + color);
+						mCurrentColor.setText(Integer.toHexString(color));
+						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
 					}
 				});
 				mColorHolder.addView(iv, params);
 			}
+		}
+	}
+
+	@Override
+	public void onFinished(Bitmap[] bitmaps) {
+		// TODO Auto-generated method stub
+		Handler h = new Handler();
+		int i = 0;
+		for (final Bitmap b : bitmaps) {
+			h.postDelayed(new Runnable() {
+				public void run() {
+					if (mImageView != null)
+						mImageView.setImageBitmap(b);
+				}
+			}, 1000 * (i++));
 		}
 	}
 

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 public class DominantColors {
 
 	public static final int DEFAULT_NUM_COLORS = 3;
-	public static final int DEFAULT_MIN_DIFF = 3;
+	public static final double DEFAULT_MIN_DIFF = 0.5f;
 	public static final int SIDE_SIZE = 200;
 
 	public static int[] getDominantColors(Bitmap bitmap) {
@@ -25,7 +25,7 @@ public class DominantColors {
 		return getDominantColors(bitmap, numColors, DEFAULT_MIN_DIFF);
 	}
 
-	public static int[] getDominantColors(Bitmap bitmap, int numColors, int minDiff) {
+	public static int[] getDominantColors(Bitmap bitmap, int numColors, double minDiff) {
 		// scale down while maintaining aspect ratio
 		bitmap = resizeToFitInSquare(bitmap, SIDE_SIZE);
 		return kMeans(getPoints(bitmap), numColors, minDiff);
@@ -55,7 +55,7 @@ public class DominantColors {
 		return points;
 	}
 
-	private static int[] kMeans(int[] points, int numColors, int minDiff) {
+	private static int[] kMeans(int[] points, int numColors, double minDiff) {
 		// create the clusters
 		int[] middles = getRandomMiddles(points, numColors);
 
