@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class DominantColorSampleActivity extends Activity {
+public class DominantColorsMainActivity extends Activity {
 
 	public static final int PICKER = 1;
 
@@ -35,6 +35,8 @@ public class DominantColorSampleActivity extends Activity {
 			if (requestCode == PICKER) {
 				Uri pickedUri = data.getData();
 				if (pickedUri != null) {
+					Intent intent = DominantColorsResultActivity.newInstance(this, pickedUri);
+					startActivity(intent);
 				}
 			}
 		}

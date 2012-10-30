@@ -19,30 +19,31 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 
 	private ImageView mImageView;
 	private LinearLayout mColorHolder;
-	
+
 	public static Intent newInstance(Context context, Uri uri) {
 		Intent intent = new Intent(context, DominantColorsResultActivity.class);
 		intent.putExtra("uri", uri);
 		return intent;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.result);
 		mImageView = (ImageView) findViewById(R.id.result_image);
 		mColorHolder = (LinearLayout) findViewById(R.id.result_color_holder);
-		
+
 		Bundle extras = getIntent().getExtras();		
 		if (extras == null)
 			finish();
-		
+
 		Uri uri = (Uri) extras.get("uri");
 		try {
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
 			bitmap = Bitmap.createScaledBitmap(bitmap, 480, 320, false);
-			mImageView.setImageBitmap(bitmap);
+			if (mImageView != null)
+				mImageView.setImageBitmap(bitmap);
 			new DominantColorsTask(this).execute(bitmap);
 		} catch (Exception e) {	}
 	}
@@ -65,5 +66,5 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 			}
 		}
 	}
-	
+
 }
