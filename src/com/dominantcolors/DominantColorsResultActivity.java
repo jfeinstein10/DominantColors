@@ -28,7 +28,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 	private TextView mCurrentColor;
 	private LinearLayout mColorHolder;
 
-	private int[] mColors;
+	private DominantColor[] mColors;
 
 	public static Intent newInstance(Context context, Uri uri, int numColors) {
 		Intent intent = new Intent(context, DominantColorsResultActivity.class);
@@ -47,7 +47,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 		mColorHolder = (LinearLayout) findViewById(R.id.result_color_holder);
 
 		if (savedInstanceState != null) {
-			mColors = savedInstanceState.getIntArray("mColors");
+			mColors = (DominantColor[]) savedInstanceState.getParcelableArray("mColors");
 			onPostExecute(mColors);
 		}
 
@@ -72,7 +72,7 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putIntArray("mColors", mColors);
+		outState.putParcelableArray("mColors", mColors);
 	}
 
 	@Override
@@ -82,19 +82,20 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 	}
 
 	@Override
-	public void onPostExecute(int[] colors) {
+	public void onPostExecute(DominantColor[] colors) {
 		mColors = colors;
 		if (mColorHolder != null) {
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
-			params.weight = 1;
-			for (final int color : colors) {
+			for (final DominantColor color : colors) {
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
+				params.weight = color.percentage;
+				
 				ImageView iv = new ImageView(DominantColorsResultActivity.this);
-				iv.setBackgroundColor(color);
+				iv.setBackgroundColor(color.color);
 				iv.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						getWindow().setBackgroundDrawable(new ColorDrawable(color));
-						mCurrentColor.setText(Integer.toHexString(color).substring(2));
-						int avg = (Color.red(color) + Color.green(color) + Color.blue(color))/3;
+						getWindow().setBackgroundDrawable(new ColorDrawable(color.color));
+						mCurrentColor.setText(Integer.toHexString(color.color).substring(2));
+						int avg = (Color.red(color.color) + Color.green(color.color) + Color.blue(color.color))/3;
 						mCurrentColor.setTextColor((avg > 128) ? Color.BLACK : Color.WHITE);
 						//						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
 					}

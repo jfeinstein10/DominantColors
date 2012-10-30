@@ -3,19 +3,19 @@ package com.dominantcolors;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-public class DominantColorsTask extends AsyncTask<Bitmap, Void, int[]> {
+public class DominantColorsTask extends AsyncTask<Bitmap, Void, DominantColor[]> {
 
 	private ColorsListener mListener;
 	private int mNumColors;
 
 	public interface ColorsListener {
 		public void onPreExecute();
-		public void onPostExecute(int[] colors);
+		public void onPostExecute(DominantColor[] colors);
 	}
 
 	public class SimpleColorsListener implements ColorsListener {
 		public void onPreExecute() { }
-		public void onPostExecute(int[] colors) { }
+		public void onPostExecute(DominantColor[] colors) { }
 	}
 	
 	public DominantColorsTask(ColorsListener listener) {
@@ -34,7 +34,7 @@ public class DominantColorsTask extends AsyncTask<Bitmap, Void, int[]> {
 	}
 
 	@Override
-	protected int[] doInBackground(Bitmap... bitmap) {
+	protected DominantColor[] doInBackground(Bitmap... bitmap) {
 		if (mNumColors > 0)
 			return DominantColors.getDominantColors(bitmap[0], mNumColors);
 		else 
@@ -42,7 +42,7 @@ public class DominantColorsTask extends AsyncTask<Bitmap, Void, int[]> {
 	}
 
 	@Override
-	protected void onPostExecute(int[] colors) {
+	protected void onPostExecute(DominantColor[] colors) {
 		if (mListener != null)
 			mListener.onPostExecute(colors);
 	}

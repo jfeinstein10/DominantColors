@@ -1,15 +1,13 @@
 package com.dominantcolors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.AsyncTask;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class DominantColors {
 
@@ -17,15 +15,15 @@ public class DominantColors {
 	public static final double DEFAULT_MIN_DIFF = 0.5f;
 	public static final int SIDE_SIZE = 100;
 
-	public static int[] getDominantColors(Bitmap bitmap) {
+	public static DominantColor[] getDominantColors(Bitmap bitmap) {
 		return getDominantColors(bitmap, DEFAULT_NUM_COLORS);
 	}
 
-	public static int[] getDominantColors(Bitmap bitmap, int numColors) {
+	public static DominantColor[] getDominantColors(Bitmap bitmap, int numColors) {
 		return getDominantColors(bitmap, numColors, DEFAULT_MIN_DIFF);
 	}
 
-	public static int[] getDominantColors(Bitmap bitmap, int numColors, double minDiff) {
+	public static DominantColor[] getDominantColors(Bitmap bitmap, int numColors, double minDiff) {
 		// scale down while maintaining aspect ratio
 		bitmap = resizeToFitInSquare(bitmap, SIDE_SIZE);
 		return kMeans(getPoints(bitmap), numColors, minDiff);
@@ -55,9 +53,10 @@ public class DominantColors {
 		return points;
 	}
 
-	private static int[] kMeans(int[] points, int numColors, double minDiff) {
+	private static DominantColor[] kMeans(int[] points, int numColors, double minDiff) {
 		// create the clusters
 		int[] middles = getRandomMiddles(points, numColors);
+		DominantColor[] colors = new DominantColor[numColors];
 
 		while (true) {
 			// resample and resort the points
@@ -84,11 +83,21 @@ public class DominantColors {
 				diff = Math.max(diff, calculateDistance(newCenter, middles[i]));
 				middles[i] = newCenter;
 			}
-			if (diff < minDiff)
+			if (diff < minDiff) {
+				for (int i = 0; i < middles.length; i++)
+					colors[i] = new DominantColor(middles[i], (float) newClusters[i].size() / (float) points.length);
 				break;
+			}
 		}
 		
-		return middles;
+		Arrays.sort(colors, new Comparator<DominantColor>() {
+			@Override
+			public int compare(DominantColor lhs, DominantColor rhs) {
+				return (int)(100 * (lhs.percentage - rhs.percentage));
+			}			
+		});
+		
+		return colors;
 	}
 
 	private static int[] getRandomMiddles(int[] points, int numColors) {
