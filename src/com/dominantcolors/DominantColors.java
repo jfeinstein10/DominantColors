@@ -104,14 +104,12 @@ public class DominantColors {
 		ArrayList<Integer> midArray = new ArrayList<Integer>();
 		int[] middles = new int[numColors];
 		int index = 0;
-		int midIndex = 0;
 		while (midArray.size() < numColors) {
-			int val = points[indices.get(index)];
+			int val = points[indices.get(index++)];
 			if (!midArray.contains(val)) {
+				middles[midArray.size()] = val;
 				midArray.add(val);
-				middles[midIndex++] = val;
 			}
-			index++;
 		}
 		return middles;
 	}
