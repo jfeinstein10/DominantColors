@@ -11,10 +11,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class DominantColor {
+public class DominantColors {
 
 	public static final int DEFAULT_NUM_COLORS = 3;
-	public static final int DEFAULT_MIN_DIFF = 5;
+	public static final int DEFAULT_MIN_DIFF = 3;
 	public static final int SIDE_SIZE = 200;
 
 	public static int[] getDominantColors(Bitmap bitmap) {

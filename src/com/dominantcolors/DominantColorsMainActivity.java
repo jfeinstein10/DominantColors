@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class DominantColorsMainActivity extends Activity {
 
 	public static final int PICKER = 1;
+	
+	private EditText mNumColors;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -18,13 +21,20 @@ public class DominantColorsMainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
+		mNumColors = (EditText) findViewById(R.id.main_numcolors);
+		
 		Button loadImage = (Button) findViewById(R.id.main_button);
 		loadImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-				i.setType("image/*");
-				startActivityForResult(
-						Intent.createChooser(i, "Load an Image"), PICKER);
+				try {
+					int numColors = Integer.valueOf(mNumColors.getText().toString());
+					Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+					i.setType("image/*");
+					startActivityForResult(
+							Intent.createChooser(i, "Load an Image"), PICKER);
+				} catch (NumberFormatException e) {
+					// number was not valid
+				}
 			}
 		});
 	}
@@ -35,7 +45,8 @@ public class DominantColorsMainActivity extends Activity {
 			if (requestCode == PICKER) {
 				Uri pickedUri = data.getData();
 				if (pickedUri != null) {
-					Intent intent = DominantColorsResultActivity.newInstance(this, pickedUri);
+					int numColors = Integer.valueOf(mNumColors.getText().toString());
+					Intent intent = DominantColorsResultActivity.newInstance(this, pickedUri, numColors);
 					startActivity(intent);
 				}
 			}

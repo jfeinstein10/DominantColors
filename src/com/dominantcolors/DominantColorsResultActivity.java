@@ -1,6 +1,6 @@
 package com.dominantcolors;
 
-import java.net.URI;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,9 +20,10 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 	private ImageView mImageView;
 	private LinearLayout mColorHolder;
 
-	public static Intent newInstance(Context context, Uri uri) {
+	public static Intent newInstance(Context context, Uri uri, int numColors) {
 		Intent intent = new Intent(context, DominantColorsResultActivity.class);
 		intent.putExtra("uri", uri);
+		intent.putExtra("numColors", numColors);
 		return intent;
 	}
 
@@ -39,13 +40,16 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 			finish();
 
 		Uri uri = (Uri) extras.get("uri");
+		int numColors = extras.getInt("numColors");
 		try {
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
 			bitmap = Bitmap.createScaledBitmap(bitmap, 480, 320, false);
 			if (mImageView != null)
 				mImageView.setImageBitmap(bitmap);
-			new DominantColorsTask(this).execute(bitmap);
-		} catch (Exception e) {	}
+			new DominantColorsTask(this, numColors).execute(bitmap);
+		} catch (IOException e) {
+			finish();
+		}
 	}
 
 	@Override
