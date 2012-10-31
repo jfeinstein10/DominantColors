@@ -7,22 +7,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dominantcolors.DominantColorsTask.ColorsListener;
 import com.dominantcolors.EtsyColorSearchTask.ColorSearchListener;
 
-public class DominantColorsResultActivity extends Activity implements ColorsListener, ColorSearchListener {
+public class DominantColorsResultActivity extends Activity implements ColorsListener {
 
 	private ImageView mImageView;
 	private TextView mCurrentColor;
@@ -97,26 +101,21 @@ public class DominantColorsResultActivity extends Activity implements ColorsList
 						mCurrentColor.setText(Integer.toHexString(color.color).substring(2));
 						int avg = (Color.red(color.color) + Color.green(color.color) + Color.blue(color.color))/3;
 						mCurrentColor.setTextColor((avg > 128) ? Color.BLACK : Color.WHITE);
-						//						new EtsyColorSearchTask(DominantColorsResultActivity.this, color).execute();
+						Handler handler = new Handler() {
+							@Override
+							public void handleMessage(Message msg) {
+								if (msg.obj instanceof Bitmap) {
+									BitmapDrawable d = new BitmapDrawable(getResources(), (Bitmap)msg.obj);
+									d.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+									getWindow().setBackgroundDrawable(d);
+								}
+							}
+						};
+						new ColourLoversSearchTask(handler).execute(color.color);
 					}
 				});
 				mColorHolder.addView(iv, params);
 			}
-		}
-	}
-
-	@Override
-	public void onFinished(Bitmap[] bitmaps) {
-		// TODO Auto-generated method stub
-		Handler h = new Handler();
-		int i = 0;
-		for (final Bitmap b : bitmaps) {
-			h.postDelayed(new Runnable() {
-				public void run() {
-					if (mImageView != null)
-						mImageView.setImageBitmap(b);
-				}
-			}, 1000 * (i++));
 		}
 	}
 
