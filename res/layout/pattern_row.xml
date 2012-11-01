@@ -3,21 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:background="@android:color/white"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="10dp" >
 
     <LinearLayout
         android:id="@+id/pattern_row_image"
         android:layout_width="match_parent"
-        android:scaleType="center"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:scaleType="center" />
 
     <TextView
         android:id="@+id/patter_row_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:gravity="center_vertical"
-        android:padding="10dp"
+        android:maxLines="1"
+        android:paddingTop="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:typeface="normal" />
 

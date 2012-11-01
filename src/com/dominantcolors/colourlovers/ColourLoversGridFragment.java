@@ -2,8 +2,10 @@ package com.dominantcolors.colourlovers;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -114,50 +116,58 @@ public class ColourLoversGridFragment extends Fragment implements OnItemClickLis
 		private class ViewHolder {
 			public ViewGroup pattern;
 			public TextView title;
+			public String currUrl;
 		}
 
 		public PatternAdapter(Context context) {
 			super(context, -1);
 		}
 
+		@TargetApi(11)
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
-			if (convertView == null) {
-				view = LayoutInflater.from(getContext()).inflate(R.layout.pattern_row, null);
-				ViewHolder temp = new ViewHolder();
-				temp.pattern = (ViewGroup) view.findViewById(R.id.pattern_row_image);
-				temp.title = (TextView) view.findViewById(R.id.patter_row_title);
-				view.setTag(temp);
-			}
 
-			final ViewHolder holder = (ViewHolder) view.getTag();
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.pattern_row, null);
+				ViewHolder temp = new ViewHolder();
+				temp.pattern = (ViewGroup) convertView.findViewById(R.id.pattern_row_image);
+				temp.title = (TextView) convertView.findViewById(R.id.patter_row_title);
+				convertView.setTag(temp);
+			}
+			
+			ViewHolder holder = (ViewHolder) convertView.getTag();
 
 			Pattern pattern = getItem(position);
-			holder.pattern.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+			holder.pattern.setBackgroundColor(Color.TRANSPARENT);
 			holder.title.setText(pattern.getTitle());
-			mImageLoader.loadImage(getActivity(), pattern.getImageUrl(), mOptions, new ImageLoadingListener() {
-				@Override
-				public void onLoadingCancelled() {
+			holder.currUrl = pattern.getImageUrl();
 
-				}
-				@Override
-				public void onLoadingComplete(Bitmap arg0) {
-					BitmapDrawable d = new BitmapDrawable(getResources(), arg0);
-					d.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			mImageLoader.loadImage(getActivity(), pattern.getImageUrl(), mOptions, new SimpleImageListener(convertView, pattern.getImageUrl()));
+
+			return convertView;
+		}
+
+		private class SimpleImageListener implements ImageLoadingListener {
+			private View view;
+			private String url;
+			public SimpleImageListener(View view, String url) {
+				this.view = view;
+				this.url = url;
+			}
+			@Override
+			public void onLoadingCancelled() { }
+			@Override
+			public void onLoadingComplete(Bitmap arg0) {
+				BitmapDrawable d = new BitmapDrawable(getResources(), arg0);
+				d.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+				ViewHolder holder = (ViewHolder) view.getTag();
+				if (url != null && url.equals(holder.currUrl))
 					holder.pattern.setBackgroundDrawable(d);
-				}
-				@Override
-				public void onLoadingFailed(FailReason arg0) {
-
-				}
-				@Override
-				public void onLoadingStarted() {
-
-				}				
-			});
-
-			return view;
+			}
+			@Override
+			public void onLoadingFailed(FailReason arg0) { }
+			@Override
+			public void onLoadingStarted() { }	
 		}
 
 	}

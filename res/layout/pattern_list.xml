@@ -6,13 +6,18 @@
     <GridView
         android:id="@android:id/list"
         android:numColumns="2"
+        android:padding="10dp"
+        android:drawSelectorOnTop="true"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:scrollbarStyle="outsideOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
         android:id="@android:id/empty"
         android:gravity="center"
-        android:text="No results for that color"
+        android:text="No results for this color"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
