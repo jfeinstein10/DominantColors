@@ -1,10 +1,13 @@
 package com.dominantcolors.colourlovers;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Pattern implements Parcelable {
 
@@ -24,6 +27,20 @@ public class Pattern implements Parcelable {
 	
 	public String getTitle() {
 		return getString("title");
+	}
+	
+	public int[] getColors() {
+		try {
+			JSONArray jColors = mObject.getJSONArray("colors");
+			int[] colors = new int[jColors.length()];
+			for (int i = 0; i < jColors.length(); i++) {
+				String s = "#" + jColors.getString(i);
+				colors[i] = Color.parseColor(s);
+			}
+			return colors;
+		} catch (JSONException e) {
+			return new int[0];
+		}
 	}
 	
 	private String getString(String key) {

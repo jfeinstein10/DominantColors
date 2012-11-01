@@ -30,7 +30,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
-public class ColourLoversGridFragment extends Fragment implements OnItemClickListener {
+public class PatternGridFragment extends Fragment implements OnItemClickListener {
 
 	private ImageLoader mImageLoader = ImageLoader.getInstance();
 
@@ -40,8 +40,8 @@ public class ColourLoversGridFragment extends Fragment implements OnItemClickLis
 	private PatternAdapter mAdapter;
 	private DisplayImageOptions mOptions;
 
-	public static ColourLoversGridFragment newInstance(int color) {
-		ColourLoversGridFragment cllf = new ColourLoversGridFragment();
+	public static PatternGridFragment newInstance(int color) {
+		PatternGridFragment cllf = new PatternGridFragment();
 		Bundle args = new Bundle();
 		args.putInt("mColor", color);
 		cllf.setArguments(args);
@@ -107,8 +107,10 @@ public class ColourLoversGridFragment extends Fragment implements OnItemClickLis
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
-
+		if (getActivity() == null)
+			return;
+		ColourLoversActivity activity = (ColourLoversActivity) getActivity();
+		activity.onPatternPressed(mAdapter.getItem(position));
 	}
 
 	private class PatternAdapter extends ArrayAdapter<Pattern> {
@@ -123,7 +125,6 @@ public class ColourLoversGridFragment extends Fragment implements OnItemClickLis
 			super(context, -1);
 		}
 
-		@TargetApi(11)
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
