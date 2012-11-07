@@ -63,7 +63,7 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 	color_sum sums[numColors];
 	int members[numColors];
 	int filled = 0;
-	uint32_t new_color;
+	uint32_ new_color;
 	while (filled < numColors) {
 		xx = rand() % info->width;
 		yy = rand() % info->height;
