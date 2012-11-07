@@ -6,10 +6,11 @@
     <GridView
         android:id="@android:id/list"
         android:numColumns="2"
-        android:padding="10dp"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
         android:drawSelectorOnTop="true"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
+        android:horizontalSpacing="@dimen/padding"
+        android:verticalSpacing="@dimen/padding"
         android:scrollbarStyle="outsideOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

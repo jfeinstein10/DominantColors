@@ -17,7 +17,6 @@ public class DominantColorsApp extends Application {
 		.memoryCacheSize(2 * 1024 * 1024) // 2 Mb
 		.denyCacheImageMultipleSizesInMemory()
 		.discCacheFileNameGenerator(new Md5FileNameGenerator())
-		.enableLogging() // Not necessary in common
 		.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);

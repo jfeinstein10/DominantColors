@@ -26,7 +26,7 @@ public class ColourLoversSearchTask extends AsyncTask<Integer, Bitmap, JSONArray
 	public ColourLoversSearchTask(Handler handler) {
 		mHandler = handler;
 	}
-
+	
 	@Override
 	protected JSONArray doInBackground(Integer... color) {
 		if (mHandler == null) return null;
@@ -35,7 +35,6 @@ public class ColourLoversSearchTask extends AsyncTask<Integer, Bitmap, JSONArray
 			HttpGet get = new HttpGet(PATTERNS + "?format=json&hex=" + Integer.toHexString(color[0]).substring(2));
 			HttpResponse response = client.execute(get);
 			String s = EntityUtils.toString(response.getEntity());
-			Log.v(PATTERNS, s);
 			return new JSONArray(s);
 		} catch (Exception e) {
 			e.printStackTrace();

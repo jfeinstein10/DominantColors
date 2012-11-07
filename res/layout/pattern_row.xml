@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pattern_row_padding"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@android:color/white"
-    android:orientation="vertical"
-    android:padding="10dp" >
+    android:layout_height="wrap_content" >
 
     <LinearLayout
-        android:id="@+id/pattern_row_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:scaleType="center" />
-
-    <TextView
-        android:id="@+id/patter_row_title"
-        android:layout_width="match_parent"
+        android:background="@drawable/dialog_full_holo_light"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:paddingTop="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:typeface="normal" />
+        android:orientation="vertical"
+        android:padding="20dp" >
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/pattern_row_image"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="center" />
+
+        <TextView
+            android:id="@+id/patter_row_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingTop="@dimen/padding"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:typeface="normal" />
+    </LinearLayout>
+
+</FrameLayout>

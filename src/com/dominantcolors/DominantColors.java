@@ -8,12 +8,13 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 public class DominantColors {
 
 	public static final int DEFAULT_NUM_COLORS = 3;
 	public static final double DEFAULT_MIN_DIFF = 0.5f;
-	public static final int SIDE_SIZE = 100;
+	public static final int SIDE_SIZE = 50;
 
 	public static DominantColor[] getDominantColors(Bitmap bitmap) {
 		return getDominantColors(bitmap, DEFAULT_NUM_COLORS);
@@ -26,7 +27,15 @@ public class DominantColors {
 	public static DominantColor[] getDominantColors(Bitmap bitmap, int numColors, double minDiff) {
 		// scale down while maintaining aspect ratio
 		bitmap = resizeToFitInSquare(bitmap, SIDE_SIZE);
-		return kMeans(getPoints(bitmap), numColors, minDiff);
+		int[] c = kmeans(bitmap, numColors);
+		Log.v("com.dominantcolors", ""+c);
+		DominantColor[] colors = new DominantColor[numColors];
+		for (int i = 0; i < numColors; i++) {
+			colors[i] = new DominantColor(c[i], 1);
+		}
+		return colors;
+		
+//		return kMeans(getPoints(bitmap), numColors, minDiff);
 	}
 
 	public static Bitmap resizeToFitInSquare(Bitmap bitmap, int side) {
@@ -89,14 +98,14 @@ public class DominantColors {
 				break;
 			}
 		}
-		
+
 		Arrays.sort(colors, new Comparator<DominantColor>() {
 			@Override
 			public int compare(DominantColor lhs, DominantColor rhs) {
 				return (int)(100 * (lhs.percentage - rhs.percentage));
 			}			
 		});
-		
+
 		return colors;
 	}
 
@@ -142,5 +151,11 @@ public class DominantColors {
 				1.2 * Math.pow(Color.green(c1) - Color.green(c2), 2) +
 				0.9 * Math.pow(Color.blue(c1) - Color.blue(c2), 2));
 	}
+
+	static {
+		System.loadLibrary("dominantcolors");
+	}
+
+	public native static int[] kmeans(Bitmap bmp, int numColors);
 
 }

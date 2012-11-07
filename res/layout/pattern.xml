@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/pattern_container"
         android:layout_width="match_parent"
-        android:background="@android:color/white"
+        android:background="@drawable/dialog_full_holo_light"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical" >

@@ -2,7 +2,6 @@ package com.dominantcolors.colourlovers;
 
 import java.util.ArrayList;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +49,11 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mOptions = new DisplayImageOptions.Builder()
+		.cacheInMemory()
+		.cacheOnDisc()
+		.displayer(new RoundedBitmapDisplayer(30))
+		.build();
 		if (getArguments() != null) {
 			mColor = getArguments().getInt("mColor");
 		}
@@ -59,27 +62,40 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.pattern_list, null);
+		int numColumns = getResources().getInteger(R.integer.num_cols);
 		mGridView = (GridView) v.findViewById(android.R.id.list);
+		mGridView.setOnItemClickListener(this);
+		mGridView.setNumColumns(numColumns);
+		mAdapter = new PatternAdapter(getActivity(), numColumns);
+		mGridView.setAdapter(mAdapter);
+
 		v.setBackgroundColor(mColor);
 		TextView empty = (TextView) v.findViewById(android.R.id.empty);
 		empty.setTextColor(Util.getTextColorForBackground(mColor));
+
+		if (savedInstanceState != null) {
+			ArrayList<Pattern> patterns = savedInstanceState.getParcelableArrayList("mAdapter");
+			if (patterns == null || patterns.isEmpty()) {
+				getPatterns();
+			} else {
+				setPatterns(patterns);
+			}
+		} else {
+			getPatterns();
+		}
 		return v;
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mOptions = new DisplayImageOptions.Builder()
-		.cacheInMemory()
-		.cacheOnDisc()
-		.displayer(new RoundedBitmapDisplayer(30))
-		.build();
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+		for (int i = 0; i < mAdapter.getCount(); i++)
+			patterns.add(mAdapter.getItem(i));
+		outState.putParcelableArrayList("mAdapter", patterns);
+	}
 
-		mAdapter = new PatternAdapter(getActivity());
-		mGridView.setAdapter(mAdapter);
-		mGridView.setOnItemClickListener(this);
-
-		// do the actual search
+	private void getPatterns() {
 		Handler handler = new Handler() {
 			@Override
 			@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -88,7 +104,7 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 					setPatterns((ArrayList)msg.obj);
 				}
 			}
-		};		
+		};
 		new ColourLoversSearchTask(handler).execute(mColor);
 	}
 
@@ -118,11 +134,17 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 		private class ViewHolder {
 			public ViewGroup pattern;
 			public TextView title;
+			public View padding;
 			public String currUrl;
 		}
 
-		public PatternAdapter(Context context) {
+		private int mNumCols;
+		private int mPadding;
+
+		public PatternAdapter(Context context, int numCols) {
 			super(context, -1);
+			mNumCols = numCols;
+			mPadding = (int) getResources().getDimension(R.dimen.padding);
 		}
 
 		@Override
@@ -133,10 +155,19 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 				ViewHolder temp = new ViewHolder();
 				temp.pattern = (ViewGroup) convertView.findViewById(R.id.pattern_row_image);
 				temp.title = (TextView) convertView.findViewById(R.id.patter_row_title);
+				temp.padding = convertView.findViewById(R.id.pattern_row_padding);
 				convertView.setTag(temp);
 			}
-			
+
 			ViewHolder holder = (ViewHolder) convertView.getTag();
+
+			if (position < mNumCols) {
+				holder.padding.setPadding(0, mPadding, 0, 0);
+			} else if (getCount() - position < mNumCols) {
+				holder.padding.setPadding(0, 0, 0, mPadding);
+			} else {
+				holder.padding.setPadding(0, 0, 0, 0);
+			}
 
 			Pattern pattern = getItem(position);
 			holder.pattern.setBackgroundColor(Color.TRANSPARENT);

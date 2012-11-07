@@ -47,10 +47,10 @@ public class DominantColorsMainActivity extends Activity {
 					chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, 
 							new Intent[] {takePhotoIntent});
 
-					ContentValues values = new ContentValues();
-					values.put(Media.TITLE, "image");
-					mPhotoUri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
-					chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+//					ContentValues values = new ContentValues();
+//					values.put(Media.TITLE, "image");
+//					mPhotoUri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, values);
+//					chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
 
 					startActivityForResult(chooserIntent, PICKER);
 				} catch (NumberFormatException e) {
