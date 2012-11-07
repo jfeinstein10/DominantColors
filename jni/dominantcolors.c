@@ -10,15 +10,21 @@
 typedef int bool;
 #define true 1
 #define false 0
+#define alpha_mask 0xFF000000
+#define red_mask 0x00FF0000
+#define red_shift 16
+#define green_mask 0x0000FF00
+#define green_shift 8
+#define blue_mask 0x000000FF
 
 #define  LOG_TAG    "dominantcolors"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 typedef struct {
-	double red;
-	double green;
-	double blue;
+	double r;
+	double g;
+	double b;
 } color_sum;
 
 static int rgb_clamp(int value) {
@@ -32,21 +38,25 @@ static int rgb_clamp(int value) {
 }
 
 static int red(uint32_t color) {
-  return (int) ((color & 0x00FF0000) >> 16);
+  return (int) ((color & red_mask) >> red_shift);
 }
 
 static int green(uint32_t color) {
-  return (int) ((color & 0x0000FF00) >> 8);
+  return (int) ((color & green_mask) >> green_shift);
 }
 
 static int blue(uint32_t color) {
-  return (int) (color & 0x000000FF);
+  return (int) (color & blue_mask);
 }
 
 static uint32_t color(int r, int g, int b) {
-  return (0xFF000000 | (r << 16) & 0x00FF0000) |
-          ((g << 8) & 0x0000FF00) |
-          (b & 0x000000FF);
+  LOGI("rgb: %d, %d, %d\n", r, g, b);
+  LOGI("color: %X\n", (alpha_mask | ((r << red_shift) & red_mask) |
+          ((g << green_shift) & green_mask) |
+          (b & blue_mask)));
+  return (alpha_mask | ((r << red_shift) & red_mask) |
+          ((g << green_shift) & green_mask) |
+          (b & blue_mask));
 }
 
 static double distance(uint32_t c1, uint32_t c2) {
@@ -82,7 +92,6 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 
   do {
   	// reset vars
-    max_error = 0;
 	for (c = 0; c < numColors; c++) {
 	  sums[c] = (color_sum) { 0, 0, 0 };
 	  members[c] = 0;
@@ -100,21 +109,22 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 			best_centroid = c;
 		  }
 		}
-		sums[best_centroid].red += red(line[xx]);
-		sums[best_centroid].green += green(line[xx]);
-		sums[best_centroid].blue += blue(line[xx]);
+		sums[best_centroid].r += red(line[xx]);
+		sums[best_centroid].g += green(line[xx]);
+		sums[best_centroid].b += blue(line[xx]);
 		members[best_centroid]++;
 	  }
 	  line = (uint32_t*) ((char*)line + info->stride);
 	}
+    max_error = 0;
 	for (c = 0; c < numColors; c++) {
 	  uint32_t new_centroid;
 	  if (members[c] == 0) {
 		new_centroid = 0xFFFFFFFF;
 	  } else {
-		new_centroid = color(sums[c].red/members[c],
-		  sums[c].green/members[c],
-		  sums[c].blue/members[c]);
+		new_centroid = color(sums[c].r/members[c],
+		  sums[c].g/members[c],
+		  sums[c].b/members[c]);
 	  }
 	  double dist = distance(new_centroid, centroids[c]);
 	  if (dist > max_error) {
