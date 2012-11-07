@@ -16,9 +16,9 @@ typedef int bool;
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 typedef struct {
-	int red;
-	int green;
-	int blue;
+	double red;
+	double green;
+	double blue;
 } color_sum;
 
 static int rgb_clamp(int value) {
@@ -61,43 +61,44 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
   uint32_t* line;
   
   color_sum sums[numColors];
-  int members[numColors];
+  double members[numColors];
   int filled = 0;
   uint32_t new_color;
   while (filled < numColors) {
     xx = rand() % info->width;
 	yy = rand() % info->height;
-	new_color = (uint32_t) ((char *)pixels + yy*info->stride)[xx];
+	new_color = ((uint32_t*) ((char *)pixels + yy*info->stride))[xx];
 	bool contained = false;
 	int i;
 	for (i = 0; i < filled; contained |= (centroids[i++] == new_color));
-	if (!contained) { 
+	if (!contained) {
 	  LOGI("%X\n", new_color);
-	  centroids[filled++] = new_color; 
+	  centroids[filled++] = new_color;
     }
-  } 
+  }
 
   double max_error;
   int index = 0;
-		
+
   do {
+  	// reset vars
     max_error = 0;
 	for (c = 0; c < numColors; c++) {
-	  color_sum s = { 0, 0, 0 };
-	  sums[c] = s;
+	  sums[c] = (color_sum) { 0, 0, 0 };
 	  members[c] = 0;
 	}
+	// start from the beginning of the image
 	line = start;
 	for (yy = 0; yy < info->height; yy++){
 	  for (xx = 0; xx < info->width; xx++){
 		double min_dist = DBL_MAX;
 		int best_centroid = 0;
 		for (c = 0; c < numColors; c++) {
-			double dist = distance(line[xx], centroids[c]);
-			if (dist < min_dist) {
-			  min_dist = dist;
-			  best_centroid = c;
-			}
+		  double dist = distance(line[xx], centroids[c]);
+		  if (dist < min_dist) {
+			min_dist = dist;
+			best_centroid = c;
+		  }
 		}
 		sums[best_centroid].red += red(line[xx]);
 		sums[best_centroid].green += green(line[xx]);
@@ -111,17 +112,20 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 	  if (members[c] == 0) {
 		new_centroid = 0xFFFFFFFF;
 	  } else {
-		new_centroid = color(sums[c].red/members[c], 
-		sums[c].green/members[c],
-		sums[c].blue/members[c]);
+		new_centroid = color(sums[c].red/members[c],
+		  sums[c].green/members[c],
+		  sums[c].blue/members[c]);
 	  }
 	  double dist = distance(new_centroid, centroids[c]);
 	  if (dist > max_error) {
 	    max_error = dist;
 	  }
+	  LOGI("\t%d new centroid: %X\n", index, new_centroid);
 	  centroids[c] = new_centroid;
     }
+    LOGI("\tmax error:%f\n", max_error);
   } while (index++ < 100 && max_error > 1);
+  LOGI("iterations: %d\n", index);
 }
 
 

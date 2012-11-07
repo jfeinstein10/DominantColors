@@ -14,7 +14,7 @@ public class DominantColors {
 
 	public static final int DEFAULT_NUM_COLORS = 3;
 	public static final double DEFAULT_MIN_DIFF = 0.5f;
-	public static final int SIDE_SIZE = 50;
+	public static final int SIDE_SIZE = 200;
 
 	public static DominantColor[] getDominantColors(Bitmap bitmap) {
 		return getDominantColors(bitmap, DEFAULT_NUM_COLORS);

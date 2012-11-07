@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 public class ColourLoversActivity extends FragmentActivity {
 
 	private int mColor;
+	private PatternGridFragment mGrid;
 
 	public static Intent newInstance(Activity activity, int color) {
 		Intent intent = new Intent(activity, ColourLoversActivity.class);
@@ -25,9 +26,11 @@ public class ColourLoversActivity extends FragmentActivity {
 
 		setContentView(R.layout.frame);
 
+		mGrid = PatternGridFragment.newInstance(mColor);
+		
 		getSupportFragmentManager()
 		.beginTransaction()
-		.add(R.id.frame, PatternGridFragment.newInstance(mColor))
+		.add(R.id.frame, mGrid)
 		.commit();
 	}
 
@@ -35,7 +38,8 @@ public class ColourLoversActivity extends FragmentActivity {
 		getSupportFragmentManager()
 		.beginTransaction()
 		.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-		.replace(R.id.frame, PatternFragment.newInstance(pattern))
+		.hide(mGrid)
+		.add(R.id.frame, PatternFragment.newInstance(pattern))
 		.addToBackStack(null)
 		.commit();
 	}
