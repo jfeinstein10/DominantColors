@@ -11,11 +11,11 @@ typedef int bool;
 #define true 1
 #define false 0
 #define alpha_mask 0xFF000000
-#define red_mask 0x00FF0000
-#define red_shift 16
+#define blue_mask 0x00FF0000
+#define blue_shift 16
 #define green_mask 0x0000FF00
 #define green_shift 8
-#define blue_mask 0x000000FF
+#define red_mask 0x000000FF
 
 #define  LOG_TAG    "dominantcolors"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -37,26 +37,26 @@ static int rgb_clamp(int value) {
   return value;
 }
 
-static int red(uint32_t color) {
-  return (int) ((color & red_mask) >> red_shift);
+static int blue(uint32_t color) {
+  return (int) ((color & blue_mask) >> blue_shift);
 }
 
 static int green(uint32_t color) {
   return (int) ((color & green_mask) >> green_shift);
 }
 
-static int blue(uint32_t color) {
-  return (int) (color & blue_mask);
+static int red(uint32_t color) {
+  return (int) (color & red_mask);
 }
 
 static uint32_t color(int r, int g, int b) {
   LOGI("rgb: %d, %d, %d\n", r, g, b);
-  LOGI("color: %X\n", (alpha_mask | ((r << red_shift) & red_mask) |
+  LOGI("color: %X\n", (alpha_mask | ((b << blue_shift) & blue_mask) |
           ((g << green_shift) & green_mask) |
-          (b & blue_mask)));
-  return (alpha_mask | ((r << red_shift) & red_mask) |
+          (r & red_mask)));
+  return (alpha_mask | ((r << blue_shift) & blue_mask) |
           ((g << green_shift) & green_mask) |
-          (b & blue_mask));
+          (b & red_mask));
 }
 
 static double distance(uint32_t c1, uint32_t c2) {
@@ -82,7 +82,7 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 	int i;
 	for (i = 0; i < filled; contained |= (centroids[i++] == new_color));
 	if (!contained) {
-	  LOGI("%X\n", new_color);
+	  LOGI("new first centroid:%X\n", new_color);
 	  centroids[filled++] = new_color;
     }
   }
