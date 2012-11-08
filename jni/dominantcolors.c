@@ -50,9 +50,13 @@ static int red(uint32_t color) {
 }
 
 static uint32_t color(int r, int g, int b) {
-  return (alpha_mask | ((r << blue_shift) & blue_mask) |
+  return (alpha_mask | ((b << blue_shift) & blue_mask) |
           ((g << green_shift) & green_mask) |
-          (b & red_mask));
+          (r & red_mask));
+}
+
+static uint32_t rev_color(uint32_t c) {
+	return color(blue(c), green(c), red(c));
 }
 
 static double distance(uint32_t c1, uint32_t c2) {
@@ -156,7 +160,11 @@ JNIEXPORT jintArray JNICALL Java_com_dominantcolors_DominantColors_kmeans(JNIEnv
   if (result == NULL)
   	return NULL;
   jint fill[numColors];
-  kmeans(&info, pixels, numColors, fill);   
+  kmeans(&info, pixels, numColors, fill);  
+  int i; 
+  for (i = 0; i < numColors; i++) {
+  	fill[i] = rev_color(fill[i]);
+  }
   
   (*env)->SetIntArrayRegion(env, result, 0, numColors, fill);
 	
