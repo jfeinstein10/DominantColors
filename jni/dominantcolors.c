@@ -50,10 +50,6 @@ static int red(uint32_t color) {
 }
 
 static uint32_t color(int r, int g, int b) {
-  LOGI("rgb: %d, %d, %d\n", r, g, b);
-  LOGI("color: %X\n", (alpha_mask | ((b << blue_shift) & blue_mask) |
-          ((g << green_shift) & green_mask) |
-          (r & red_mask)));
   return (alpha_mask | ((r << blue_shift) & blue_mask) |
           ((g << green_shift) & green_mask) |
           (b & red_mask));
@@ -82,7 +78,6 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 	int i;
 	for (i = 0; i < filled; contained |= (centroids[i++] == new_color));
 	if (!contained) {
-	  LOGI("new first centroid:%X\n", new_color);
 	  centroids[filled++] = new_color;
     }
   }
@@ -130,12 +125,9 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 	  if (dist > max_error) {
 	    max_error = dist;
 	  }
-	  LOGI("\t%d new centroid: %X\n", index, new_centroid);
 	  centroids[c] = new_centroid;
     }
-    LOGI("\tmax error:%f\n", max_error);
   } while (index++ < 100 && max_error > 1);
-  LOGI("iterations: %d\n", index);
 }
 
 
