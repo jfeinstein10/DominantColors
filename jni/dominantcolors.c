@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <vector.h>
 
 typedef int bool;
 #define true 1
@@ -135,8 +136,7 @@ static void kmeans(AndroidBitmapInfo* info, void* pixels, int numColors, jint* c
 }
 
 
-JNIEXPORT jintArray JNICALL Java_com_dominantcolors_DominantColors_kmeans(JNIEnv * env, jobject  obj, jobject bitmap, jint numColors)
-{
+JNIEXPORT jintArray JNICALL Java_com_dominantcolors_DominantColors_kmeans(JNIEnv * env, jobject  obj, jobject bitmap, jint numColors) {
   AndroidBitmapInfo info;
   int ret;
   void* pixels;
@@ -144,13 +144,11 @@ JNIEXPORT jintArray JNICALL Java_com_dominantcolors_DominantColors_kmeans(JNIEnv
   if ((ret = AndroidBitmap_getInfo(env, bitmap, &info)) < 0) {
     LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
     return NULL;
-  }
-    
+  }    
   if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
     LOGE("Bitmap format is not RGBA_8888!");
     return NULL;
   }
-
   if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
     LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
   }    
@@ -160,7 +158,7 @@ JNIEXPORT jintArray JNICALL Java_com_dominantcolors_DominantColors_kmeans(JNIEnv
   if (result == NULL)
   	return NULL;
   jint fill[numColors];
-  kmeans(&info, pixels, numColors, fill);  
+  kmeans(&info, pixels, numColors, fill);
   int i; 
   for (i = 0; i < numColors; i++) {
   	fill[i] = rev_color(fill[i]);

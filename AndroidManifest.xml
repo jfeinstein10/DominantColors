@@ -10,11 +10,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
+        android:name=".DominantColorsApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name=".DominantColorsApp"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".DominantColorsMainActivity"
@@ -26,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DominantColorsResultActivity" />
+        <activity android:name=".DominantColorsLiveActivity" />
         <activity android:name=".colourlovers.ColourLoversActivity" />
     </application>
 

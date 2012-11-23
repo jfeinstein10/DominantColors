@@ -3,7 +3,9 @@
     <string name="app_name">DominantColors</string>
     <string name="title_activity_main">DominantColors</string>
     <string name="number_colors">Number of Colors</string>
-    <string name="load_image">Load an Image</string>
+    <string name="pick_image">Pick an Image</string>
+    <string name="take_image">Take a Picutre</string>
+    <string name="live_image">Let\'s do it Live</string>
     <string name="select_color">Select a Color</string>
 
 </resources>

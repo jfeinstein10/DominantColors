@@ -32,11 +32,10 @@ public class DominantColorsResultActivity extends FragmentActivity implements Co
 
 	private DominantColor[] mColors;
 
-	public static Intent newInstance(Context context, Uri uri, int numColors) {
-		Intent intent = new Intent(context, DominantColorsResultActivity.class);
-		intent.putExtra("uri", uri);
-		intent.putExtra("numColors", numColors);
-		return intent;
+	public static Intent newInstance(Context context, Intent data, int numColors) {
+		data.setClass(context, DominantColorsResultActivity.class);
+		data.putExtra("numColors", numColors);
+		return data;
 	}
 
 	@Override
@@ -57,18 +56,22 @@ public class DominantColorsResultActivity extends FragmentActivity implements Co
 		if (extras == null)
 			finish();
 
-		Uri uri = (Uri) extras.get("uri");
+		Uri uri = getIntent().getData();
+		Bitmap bitmap = (Bitmap) getIntent().getExtras().get("data");
 		int numColors = extras.getInt("numColors");
-		try {
-			Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-			bitmap = DominantColors.resizeToFitInSquare(bitmap, 500);
-			if (mImageView != null)
-				mImageView.setImageBitmap(bitmap);
-			if (mColors == null)
-				new DominantColorsTask(this, numColors).execute(bitmap);
-		} catch (IOException e) {
-			finish();
+		if (bitmap == null) {
+			try {
+				bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+			} catch (IOException e) {
+				finish();
+				return;
+			}
 		}
+		bitmap = DominantColors.resizeToFitInSquare(bitmap, 500);
+		if (mImageView != null)
+			mImageView.setImageBitmap(bitmap);
+		if (mColors == null)
+			new DominantColorsTask(this, numColors).execute(bitmap);
 	}
 
 	@Override
@@ -90,7 +93,7 @@ public class DominantColorsResultActivity extends FragmentActivity implements Co
 			for (final DominantColor color : colors) {
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
 				params.weight = color.percentage;
-				
+
 				ImageView iv = new ImageView(DominantColorsResultActivity.this);
 				iv.setBackgroundColor(color.color);
 				iv.setOnClickListener(new OnClickListener() {
