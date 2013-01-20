@@ -5,7 +5,6 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 public class PatternFragment extends Fragment {
 
-	private ImageLoader mImageLoader = ImageLoader.getInstance();
+	private ImageLoader mImageCache = ImageLoader.getInstance();
 	private Pattern mPattern;
 	
 	private ViewGroup mBackground;
@@ -64,7 +63,7 @@ public class PatternFragment extends Fragment {
 		// remove the placeholder text
 		mTextView.setVisibility(View.GONE);
 		// set the background
-		mImageLoader.loadImage(getActivity(), pattern.getImageUrl(),
+		mImageCache.loadImage(getActivity(), pattern.getImageUrl(),
 				new ImageLoadingListener() {
 					@Override
 					public void onLoadingComplete(Bitmap arg0) {

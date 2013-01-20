@@ -34,8 +34,15 @@ public class DominantColors {
 			colors[i] = new DominantColor(c[i], 1);
 		}
 		return colors;
-		
-//		return kMeans(getPoints(bitmap), numColors, minDiff);
+	}
+	
+	public static DominantColor[] getMeanShift(Bitmap bitmap, float radius) {
+		int[] c = meanShift(bitmap, radius);
+		DominantColor[] colors = new DominantColor[c.length];
+		for (int i = 0; i < c.length; i++) {
+			colors[i] = new DominantColor(c[i], 1);
+		}
+		return colors;
 	}
 
 	public static Bitmap resizeToFitInSquare(Bitmap bitmap, int side) {
@@ -157,5 +164,7 @@ public class DominantColors {
 	}
 
 	public native static int[] kmeans(Bitmap bmp, int numColors);
+	
+	public native static int[] meanShift(Bitmap bmp, float radius);
 
 }

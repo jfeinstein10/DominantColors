@@ -30,7 +30,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class PatternGridFragment extends Fragment implements OnItemClickListener {
 
-	private ImageLoader mImageLoader = ImageLoader.getInstance();
+	private ImageLoader mImageCache = ImageLoader.getInstance();
 
 	private GridView mGridView;
 
@@ -174,7 +174,7 @@ public class PatternGridFragment extends Fragment implements OnItemClickListener
 			holder.title.setText(pattern.getTitle());
 			holder.currUrl = pattern.getImageUrl();
 
-			mImageLoader.loadImage(getActivity(), pattern.getImageUrl(), mOptions, new SimpleImageListener(convertView, pattern.getImageUrl()));
+			mImageCache.loadImage(getActivity(), pattern.getImageUrl(), mOptions, new SimpleImageListener(convertView, pattern.getImageUrl()));
 
 			return convertView;
 		}

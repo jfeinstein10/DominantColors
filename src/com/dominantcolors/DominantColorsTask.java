@@ -35,6 +35,7 @@ public class DominantColorsTask extends AsyncTask<Bitmap, Void, DominantColor[]>
 
 	@Override
 	protected DominantColor[] doInBackground(Bitmap... bitmap) {
+//		return DominantColors.getMeanShift(bitmap[0], 40.0f);
 		if (mNumColors > 0)
 			return DominantColors.getDominantColors(bitmap[0], mNumColors);
 		else 
